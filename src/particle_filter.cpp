@@ -198,13 +198,12 @@ void ParticleFilter::resample() {
 		weights.push_back(p.weight);
 	}
 	
-	//ramdom starting idx
-	uniform_int_distribution<int> uni_dist(0, num_particles-1);
-	auto idx = uni_dist(eng);
-
 	double max_weight = *max_element(weights.begin(), weights.end());
 	uniform_real_distribution<double> rand_dist(0.0, max_weight);
 
+	//set index based on discrete distribution
+	std::discrete_distribution<> disc_dist(weights.begin(), weights.end());
+	auto idx = disc_dist(eng);
 	double beta = 0.0;
 	
 	for(Particle p : particles){
